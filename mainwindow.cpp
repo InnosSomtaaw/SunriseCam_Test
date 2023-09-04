@@ -134,20 +134,21 @@ void MainWindow::initImageProcess()
 
 void MainWindow::initVideoPlayers()
 {
-//    //数字相机类初始化（HIKVISION读取）
-//    cam1=new CMvCamera;
-//    if(m_stDevList.nDeviceNum<2)
-//        return;
-//    cam1->m_stDevList=m_stDevList;
-//    cam1->startCamera();
-//    connect(cam1,&CMvCamera::sigGetOneFrame,
-//            this,&MainWindow::slotGetOneFrame1);
-
-//    //数字相机类初始化（ffmpeg读取）
-    cam1=new VideoPlayer;
-    cam1->camURL=urls[0];
-    connect(cam1,&VideoPlayer::sigGetOneFrame,
+    //数字相机类初始化（HIKVISION读取）
+    cam1=new CMvCamera;
+    if(m_stDevList.nDeviceNum<1)
+        return;
+    cam1->m_stDevList=m_stDevList;
+    cam1->nIndex=0;
+    cam1->startCamera();
+    connect(cam1,&CMvCamera::sigGetOneFrame,
             this,&MainWindow::slotGetOneFrame1);
+
+////    //数字相机类初始化（ffmpeg读取）
+//    cam1=new VideoPlayer;
+//    cam1->camURL=urls[0];
+//    connect(cam1,&VideoPlayer::sigGetOneFrame,
+//            this,&MainWindow::slotGetOneFrame1);
 }
 
 void MainWindow::initBaseSettings()
@@ -284,10 +285,12 @@ void MainWindow::on_buttonStartCapture_clicked()
         cam1->isCapturing=true;
         ui->buttonStartCapture->setText("StopCapture");
 
-        if(!cam1->hasStarted)
-            cam1->startCamera();
-        else
-            cam1->camMutex.unlock();
+//        if(!cam1->hasStarted)
+//            cam1->startCamera();
+//        else
+//            cam1->camMutex.unlock();
+
+        cam1->StartGrabbing();
 
     }
     else if(ui->buttonStartCapture->text()=="StopCapture")
@@ -296,7 +299,8 @@ void MainWindow::on_buttonStartCapture_clicked()
 
         ui->buttonStartCapture->setText("StartCapture");
 
-        cam1->camMutex.tryLock();
+//        cam1->camMutex.tryLock();
+        cam1->StopGrabbing();
 
 //        if((!imgProcess_main->img_inputs[0].empty())&(!imgProcess_main->img_inputs[2].empty()))
 //        {
@@ -355,7 +359,7 @@ void MainWindow::slotGetOneFrame1(QImage img)
 
     if(cam1->isCapturing && isDetecting)
     {
-        img_input1=Mat(img.height(), img.width(), CV_8UC1,
+        img_input1=Mat(img.height(), img.width(), CV_8UC3,
                         img.bits(), img.bytesPerLine());
         if(imgProcessor1->ipcMutex.tryLock())
         {

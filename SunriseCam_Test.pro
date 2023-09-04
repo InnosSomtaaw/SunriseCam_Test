@@ -1,5 +1,4 @@
-QT       += core gui
-qtHaveModule(printsupport): QT += printsupport
+QT       += core gui network xml
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11

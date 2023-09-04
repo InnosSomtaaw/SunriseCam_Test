@@ -39,7 +39,10 @@ void Image_Processing_Class::generalProcess()
     usrtimer.start();
     if (img_input1.empty() || !ipcMutex.tryLock())
         return;
-    img_output2 = img_input1.clone();
+    if(img_input1.channels()==3)
+        cvtColor(img_input1,img_output2,COLOR_RGB2GRAY);
+    else
+        img_output2 = img_input1.clone();
     ipcMutex.unlock();
 
     vector<Point> cont;

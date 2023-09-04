@@ -116,7 +116,7 @@ void VideoPlayer::run()
     hasFinished = false;
     while (1)
     {
-        if (av_read_frame(pFormatCtx, packet) < 0 || !isCapturing)
+        if (av_read_frame(pFormatCtx, packet) < 0)
         {
             hasFinished = true;
             printf("isCapturing is false...\n");

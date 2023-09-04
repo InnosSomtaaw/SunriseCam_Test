@@ -4,6 +4,7 @@ CMvCamera::CMvCamera()
 {
     isCapturing = false; hasFinished = false;hasStarted=false;
     m_hDevHandle = MV_NULL;
+    nIndex=0;
 }
 
 CMvCamera::~CMvCamera()
@@ -19,7 +20,6 @@ CMvCamera::~CMvCamera()
 
 void CMvCamera::startCamera()
 {
-    int nIndex = 1;
     if ((nIndex < 0) | (nIndex >= MV_MAX_DEVICE_NUM))
     {
         ShowErrorMsg("Please select device", 0);
@@ -59,11 +59,37 @@ void CMvCamera::startCamera()
 }
 
 void CMvCamera::getOneFrame()
-{
-    QImage disImage = QImage((uchar*)pData,pFrameInfo->nWidth,pFrameInfo->nHeight,
-                             pFrameInfo->nWidth,QImage::Format_Grayscale8);
+{  
+    QImage disImage;
+    unsigned char *pConvertData=NULL;
+    if(IsColor(pFrameInfo->enPixelType))
+    {
+        unsigned int nConvertDataSize=pFrameInfo->nWidth * pFrameInfo->nHeight*3;
+        pConvertData = (unsigned char*)malloc(nConvertDataSize);
+        // Convert pixel format
+        MV_CC_PIXEL_CONVERT_PARAM stConvertParam = {0};
+        stConvertParam.nWidth = pFrameInfo->nWidth;                 // image width
+        stConvertParam.nHeight = pFrameInfo->nHeight;               // image height
+        stConvertParam.pSrcData = pData;                         // input data buffer
+        stConvertParam.nSrcDataLen = pFrameInfo->nFrameLen;         // input data size
+        stConvertParam.enSrcPixelType = pFrameInfo->enPixelType;    // input pixel format
+        stConvertParam.enDstPixelType = PixelType_Gvsp_RGB8_Packed;                         // output pixel format
+        stConvertParam.pDstBuffer = pConvertData;                               // output data buffer
+        stConvertParam.nDstBufferSize = nConvertDataSize;                       // output buffer size
+        ConvertPixelType(&stConvertParam);
+        disImage = QImage((uchar*)pConvertData,pFrameInfo->nWidth,pFrameInfo->nHeight,
+                             pFrameInfo->nWidth*3,QImage::Format_RGB888);
+    }
+    else
+        disImage = QImage((uchar*)pData,pFrameInfo->nWidth,pFrameInfo->nHeight,
+                          pFrameInfo->nWidth,QImage::Format_Grayscale8);
     QImage image = disImage.copy(); //把图像复制一份 传递给界面显示
     emit sigGetOneFrame(image);  //发送信号
+    if (pConvertData)
+    {
+        free(pConvertData);
+        pConvertData = NULL;
+    }
 }
 
 // ch:获取SDK版本号 | en:Get SDK Version
@@ -366,6 +392,54 @@ int CMvCamera::SaveImage(MV_SAVE_IMAGE_PARAM_EX* pstParam)
 {
     return MV_CC_SaveImageEx2(m_hDevHandle, pstParam);
 }
+
+bool CMvCamera::IsColor(MvGvspPixelType enType)
+{
+    switch(enType)
+    {
+    case PixelType_Gvsp_BGR8_Packed:
+    case PixelType_Gvsp_YUV422_Packed:
+    case PixelType_Gvsp_YUV422_YUYV_Packed:
+    case PixelType_Gvsp_BayerGR8:
+    case PixelType_Gvsp_BayerRG8:
+    case PixelType_Gvsp_BayerGB8:
+    case PixelType_Gvsp_BayerBG8:
+    case PixelType_Gvsp_BayerGB10:
+    case PixelType_Gvsp_BayerGB10_Packed:
+    case PixelType_Gvsp_BayerBG10:
+    case PixelType_Gvsp_BayerBG10_Packed:
+    case PixelType_Gvsp_BayerRG10:
+    case PixelType_Gvsp_BayerRG10_Packed:
+    case PixelType_Gvsp_BayerGR10:
+    case PixelType_Gvsp_BayerGR10_Packed:
+    case PixelType_Gvsp_BayerGB12:
+    case PixelType_Gvsp_BayerGB12_Packed:
+    case PixelType_Gvsp_BayerBG12:
+    case PixelType_Gvsp_BayerBG12_Packed:
+    case PixelType_Gvsp_BayerRG12:
+    case PixelType_Gvsp_BayerRG12_Packed:
+    case PixelType_Gvsp_BayerGR12:
+    case PixelType_Gvsp_BayerGR12_Packed:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool CMvCamera::IsMono(MvGvspPixelType enType)
+{
+    switch(enType)
+    {
+    case PixelType_Gvsp_Mono10:
+    case PixelType_Gvsp_Mono10_Packed:
+    case PixelType_Gvsp_Mono12:
+    case PixelType_Gvsp_Mono12_Packed:
+        return true;
+    default:
+        return false;
+    }
+}
+
 
 void __stdcall ImageCallBack(unsigned char *pData, MV_FRAME_OUT_INFO_EX *pFrameInfo, void *pUser)
 {

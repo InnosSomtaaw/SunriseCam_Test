@@ -20,7 +20,7 @@ public:
      CMvCamera();
     ~CMvCamera();
 
-//    int isCapturing,hasFinished,hasStarted;
+     int nIndex;
      MV_CC_DEVICE_INFO_LIST  m_stDevList;
      unsigned char * pData;
      MV_FRAME_OUT_INFO_EX* pFrameInfo;
@@ -105,6 +105,8 @@ public:
     // ch:保存图片为文件 | en:Save the image as a file
     //int SaveImageToFile(MV_SAVE_IMG_TO_FILE_PARAM* pstParam);
 
+    bool IsColor(MvGvspPixelType enType);
+    bool IsMono(MvGvspPixelType enType);
 private:
 
     void* m_hDevHandle;

@@ -40,10 +40,10 @@ private:
     vector<Point2i> basePoints;
     WorkConditionsEnum workCond;
     QSettings *iniRW;
-//    //数字相机类（HIKVISION相机）
-//    CMvCamera *cam1;
-    //数字相机类（ffmpeg读取）
-    VideoPlayer *cam1;
+    //数字相机类（HIKVISION相机）
+    CMvCamera *cam1;
+//    //数字相机类（ffmpeg读取）
+//    VideoPlayer *cam1;
     //图像处理类
     Image_Processing_Class *imgProcessor1;
     IMG_HDR *imgProcHDR;
