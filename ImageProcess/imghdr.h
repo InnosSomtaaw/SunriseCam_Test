@@ -7,7 +7,7 @@ class IMG_HDR : public Image_Processing_Class
 {
     Q_OBJECT
 public:
-    explicit IMG_HDR();
+    IMG_HDR();
     ~IMG_HDR();
 
 //signals:

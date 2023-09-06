@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2023-09-01T17:25:00. -->
+<!-- Written by QtCreator 4.11.0, 2023-09-06T17:13:06. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -65,7 +65,7 @@
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Qt-5.12.8-aarch64-linux</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Qt-5.12.8-aarch64-linux</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{0aa7b193-1e8f-44af-8b9a-c4a45aee2869}</value>
-   <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
+   <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">1</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
@@ -220,23 +220,35 @@
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinux.DirectUploadStep</value>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedFiles">
        <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Debug/SunriseCam_Test</value>
+       <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Release/SunriseCam_Test</value>
+       <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Debug/SunriseCam_Test</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts">
        <value type="QString">192.168.137.101</value>
+       <value type="QString">192.168.137.101</value>
+       <value type="QString">192.168.137.10</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedRemotePaths">
        <value type="QString">/home/sunrise/CrossCompiled/SunriseCam_Test</value>
+       <value type="QString">/home/sunrise/CrossCompiled/SunriseCam_Test</value>
+       <value type="QString">/home/sunrise/CrossCompiled/SunriseCam_Test</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedSysroots">
+       <value type="QString"></value>
+       <value type="QString"></value>
        <value type="QString"></value>
       </valuelist>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.IgnoreMissingFiles">false</value>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.Incremental">true</value>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes">
-       <value type="QDateTime">2023-09-01T17:22:13.741</value>
+       <value type="QDateTime">2023-09-06T17:11:29.022</value>
+       <value type="QDateTime">2023-09-06T17:12:12.604</value>
+       <value type="QDateTime">2023-09-05T16:50:31.852</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes">
-       <value type="QDateTime">2023-09-01T17:22:14.000</value>
+       <value type="QDateTime">2023-09-06T17:11:30.000</value>
+       <value type="QDateTime">2023-09-06T17:12:13.000</value>
+       <value type="QDateTime">2023-09-05T16:51:24.000</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
@@ -310,7 +322,7 @@
     <value type="int" key="PE.EnvironmentAspect.Base">1</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes">
      <value type="QString">DISPLAY=192.168.137.1:0</value>
-     <value type="QString">LD_LIBRARY_PATH=/opt/MVS/lib/aarch64:/home/sunrise/opencv-build/install/lib:/home/sunrise/ffmpegInstall/lib</value>
+     <value type="QString">LD_LIBRARY_PATH=/opt/MVS/lib/aarch64:/home/sunrise/opencv-build/install/lib:/home/sunrise/ffmpegInstall/lib:/home/sunrise/code/test/aarch64/dnn/lib</value>
     </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SunriseCam_Test (on X3M)</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinuxRunConfiguration:/mnt/d/WORKS/SunriseCam_Test/SunriseCam_Test.pro</value>
@@ -326,6 +338,7 @@
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">false</value>
+    <value type="bool" key="RunConfiguration.UseTerminal">false</value>
     <value type="bool" key="RunConfiguration.UseX11Forwarding">false</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>

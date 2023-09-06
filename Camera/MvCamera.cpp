@@ -5,6 +5,7 @@ CMvCamera::CMvCamera()
     isCapturing = false; hasFinished = false;hasStarted=false;
     m_hDevHandle = MV_NULL;
     nIndex=0;
+    froceRaw=false;
 }
 
 CMvCamera::~CMvCamera()
@@ -55,14 +56,17 @@ void CMvCamera::startCamera()
             ShowErrorMsg("Warning: Get Packet Size fail!", nRet);
         }
     }
-    RegisterImageCallBack(ImageCallBack,this);
+    MV_CC_SetEnumValue(m_hDevHandle, "TriggerMode", 0);
+    nRet = RegisterImageCallBack(ImageCallBack,this);
+    if (MV_OK != nRet)
+        ShowErrorMsg("Register Call Back fail!",nRet);
 }
 
 void CMvCamera::getOneFrame()
 {  
     QImage disImage;
     unsigned char *pConvertData=NULL;
-    if(IsColor(pFrameInfo->enPixelType))
+    if(IsColor(pFrameInfo->enPixelType) && !froceRaw)
     {
         unsigned int nConvertDataSize=pFrameInfo->nWidth * pFrameInfo->nHeight*3;
         pConvertData = (unsigned char*)malloc(nConvertDataSize);

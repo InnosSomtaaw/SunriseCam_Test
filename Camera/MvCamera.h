@@ -24,6 +24,7 @@ public:
      MV_CC_DEVICE_INFO_LIST  m_stDevList;
      unsigned char * pData;
      MV_FRAME_OUT_INFO_EX* pFrameInfo;
+     bool froceRaw;
 
      void startCamera() override;
      void getOneFrame() override;

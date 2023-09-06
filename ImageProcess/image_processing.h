@@ -25,7 +25,7 @@ enum WorkConditionsEnum
     HDRfrom1Img,
     HDRfrom1ImgGPU,
     GeneralProcess,
-    InferenceRKNN,
+    ModelForward,
 };
 void QImage2Mat(QImage img, Mat& imgMat);
 

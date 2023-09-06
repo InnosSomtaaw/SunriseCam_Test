@@ -11,6 +11,7 @@
 #include "Camera/videoplayer.h"
 #include "ImageProcess/image_processing.h"
 #include "ImageProcess/imghdr.h"
+#include "ImageProcess/lead_horizon.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow;}
@@ -47,6 +48,7 @@ private:
     //图像处理类
     Image_Processing_Class *imgProcessor1;
     IMG_HDR *imgProcHDR;
+    Lead_Horizon *imgProcHorizon;
     //图像处理线程
     QThread *imgProThread1;
 

@@ -99,6 +99,8 @@ void MainWindow::initImageProcess()
 {
     imgProcHDR=new IMG_HDR;
     imgProcHDR->workCond=workCond;
+    imgProcHorizon=new Lead_Horizon;
+    imgProcHorizon->workCond=workCond;
     switch (workCond) {
     case HDRfrom2Img:
     case HDRfrom2ImgGPU:
@@ -111,12 +113,31 @@ void MainWindow::initImageProcess()
         imgProcessor1=imgProcHDR;
         break;
     }
-    case InferenceRKNN:
+    case ModelForward:
+    {
+        connect(this,&MainWindow::startCam1Request,
+                imgProcHorizon,&Lead_Horizon::startProcessOnce);
+        connect(imgProcHorizon,&Lead_Horizon::outputImgProcessedRequest,
+                this,&MainWindow::on_imagebox1_refresh);
+        QByteArray qba = proj_path.toLocal8Bit();
+        imgProcHorizon->model_name=qba.data();
+        imgProcHorizon->rawW=4080;
+        imgProcHorizon->rawH=3000;
+//        imgProcHorizon->rawW=640;
+//        imgProcHorizon->rawH=360;
+        imgProcHorizon->iniImgProcessor();
+        if(imgProcHorizon->hasInited)
+            ui->buttonOpenAIProject->setEnabled(false);
+        imgProcessor1=imgProcHorizon;
+        break;
+    }
     case GeneralProcess:
     default:
     {
         imgProcessor1=new Image_Processing_Class;
         imgProcessor1->workCond=workCond;
+        imgProcessor1->onGPU=true;
+        ocl::setUseOpenCL(imgProcessor1->onGPU);
         connect(this,&MainWindow::startCam1Request,
                 imgProcessor1,&Image_Processing_Class::startProcessOnce);
         connect(imgProcessor1,&Image_Processing_Class::outputImgProcessedRequest,
@@ -127,9 +148,6 @@ void MainWindow::initImageProcess()
     imgProThread1 = new QThread();
     imgProcessor1->moveToThread(imgProThread1);
     imgProThread1->start();
-
-    imgProcessor1->onGPU=true;
-    ocl::setUseOpenCL(imgProcessor1->onGPU);
 }
 
 void MainWindow::initVideoPlayers()
@@ -140,6 +158,8 @@ void MainWindow::initVideoPlayers()
         return;
     cam1->m_stDevList=m_stDevList;
     cam1->nIndex=0;
+    cam1->froceRaw=true;
+    imgProcHorizon->input_is_bayer=cam1->froceRaw;
     cam1->startCamera();
     connect(cam1,&CMvCamera::sigGetOneFrame,
             this,&MainWindow::slotGetOneFrame1);
@@ -177,14 +197,14 @@ void MainWindow::initWorkCondition()
 {
     iniRW = new QSettings("LastSettings.ini",QSettings::IniFormat);
     workCond=WorkConditionsEnum(iniRW->value("WorkCondition/WorkCondition").toInt());
-    proj_path=iniRW->value("InferenceRKNN/ModelPath").toString();
+    proj_path=iniRW->value("ModelForward/ModelPath").toString();
     ui->condComboBox->setCurrentIndex(workCond);
 }
 
 void MainWindow::on_buttonOpenAIProject_clicked()
 {
-    proj_path = QFileDialog::getOpenFileName(this,tr("Open RKNN Model: "),"./model/",
-                                             tr("Model File(*.rknn)"));
+    proj_path = QFileDialog::getOpenFileName(this,tr("Open AI Model: "),"./models/",
+                                             tr("Model File(*.bin)"));
     if (proj_path.isEmpty())
         return;
 //    proj_path = proj_path.replace("/","\");
@@ -199,10 +219,11 @@ void MainWindow::on_imagebox1_OpenImage()
 //    Mat srcImage = imread(fileName.toLatin1().data());//读取图片数据
     Mat srcImage = imread(fileName.toLocal8Bit().toStdString());//读取图片数据
 
+    cvtColor(srcImage, srcImage, COLOR_BGR2RGB);//图像格式转换
+
     img_input1 = srcImage.clone();
     imgProcessor1->img_input1=img_input1;
 
-    cvtColor(srcImage, srcImage, COLOR_BGR2RGB);//图像格式转换
     QImage disImage = QImage(srcImage.data,srcImage.cols,srcImage.rows,
                              QImage::Format_RGB888);
 
@@ -359,8 +380,16 @@ void MainWindow::slotGetOneFrame1(QImage img)
 
     if(cam1->isCapturing && isDetecting)
     {
-        img_input1=Mat(img.height(), img.width(), CV_8UC3,
-                        img.bits(), img.bytesPerLine());
+        if(img.format()==QImage::Format_RGB888)
+            img_input1=Mat(img.height(), img.width(), CV_8UC3,
+                           img.bits(), img.bytesPerLine());
+        else if(img.format()==QImage::Format_RGB32 ||
+                img.format()==QImage::Format_RGBA8888)
+            img_input1=Mat(img.height(), img.width(), CV_8UC4,
+                           img.bits(), img.bytesPerLine());
+        else
+            img_input1=Mat(img.height(), img.width(), CV_8UC1,
+                           img.bits(), img.bytesPerLine());
         if(imgProcessor1->ipcMutex.tryLock())
         {
             img_input1.copyTo(imgProcessor1->img_input1);
@@ -408,7 +437,26 @@ void MainWindow::on_condComboBox_activated(int index)
         imgProcessor1=imgProcHDR;
         break;
     }
-    case InferenceRKNN:
+    case ModelForward:
+    {
+        if(!imgProcHorizon->hasInited)
+        {
+            QByteArray qba = proj_path.toLocal8Bit();
+            imgProcHorizon->model_name=qba.data();
+            imgProcHorizon->rawW=4080;
+            imgProcHorizon->rawH=3000;
+            imgProcHorizon->iniImgProcessor();
+            ui->buttonOpenAIProject->setEnabled(false);
+        }
+        else
+            ui->buttonOpenAIProject->setEnabled(false);
+        connect(this,&MainWindow::startCam1Request,
+                imgProcHorizon,&Lead_Horizon::startProcessOnce);
+        connect(imgProcHorizon,&Lead_Horizon::outputImgProcessedRequest,
+                this,&MainWindow::on_imagebox1_refresh);
+        imgProcessor1=imgProcHorizon;
+        break;
+    }
     case GeneralProcess:
     default:
     {
@@ -426,5 +474,5 @@ void MainWindow::on_condComboBox_activated(int index)
 
     iniRW = new QSettings("LastSettings.ini",QSettings::IniFormat);
     iniRW->setValue("WorkCondition/WorkCondition",index);
-    iniRW->setValue("InferenceRKNN/ModelPath",proj_path);
+    iniRW->setValue("ModelForward/ModelPath",proj_path);
 }
