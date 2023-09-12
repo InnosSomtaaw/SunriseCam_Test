@@ -99,16 +99,17 @@ void Lead_Horizon::startProcessOnce()
     if (!ipcMutex.tryLock())
         return;
     if(img_input1.channels()==4)
-        cvtColor(img_input1,img_input1,COLOR_BGRA2RGB);
+        cvtColor(img_input1,img_output3,COLOR_BGRA2RGB);
+    else if(input_is_bayer)
+        cvtColor(img_input1,img_output3,COLOR_BayerRG2BGR);
+    else
+        resize(img_input1,img_output3,Size(input_w,input_h),0,0,INTER_NEAREST);
 
     if(rawW<4081 && rawH<4081 && !input_is_bayer)
-        resizer->Resize(img_input1,img_output3);
+        resizer->Resize(img_output3,img_output3);
     else
-        resize(img_input1,img_output3,Size(input_w,input_h));
+        resize(img_output3,img_output3,Size(input_w,input_h),0,0,INTER_NEAREST);
     ipcMutex.unlock();
-
-    if(input_is_bayer)
-        cvtColor(img_output3,img_output3,COLOR_BayerRG2RGB);
 
     if (!img_output3.isContinuous())
         img_output3 = img_output3.clone();
@@ -143,7 +144,10 @@ void Lead_Horizon::startProcessOnce()
 
     img_output2 = Mat(outputH,outputW,CV_8UC(8),pred);
     extractChannel(img_output2,img_output2,0);
-    resize(img_output3,img_output1,Size(outputW,outputH));
+    resize(img_output3,img_output1,Size(outputW,outputH),INTER_NEAREST);
+
+//    resize(img_output2,img_output2,Size(rawW,rawH),INTER_NEAREST);
+//    resize(img_output3,img_output1,Size(rawW,rawH),INTER_NEAREST);
 
     for (int i = 1; i < classNums; i++)
     {

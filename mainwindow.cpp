@@ -121,7 +121,8 @@ void MainWindow::initImageProcess()
                 this,&MainWindow::on_imagebox1_refresh);
         QByteArray qba = proj_path.toLocal8Bit();
         imgProcHorizon->model_name=qba.data();
-        imgProcHorizon->rawW=4080;
+//        imgProcHorizon->rawW=4080;
+        imgProcHorizon->rawW=4096;
         imgProcHorizon->rawH=3000;
 //        imgProcHorizon->rawW=640;
 //        imgProcHorizon->rawH=360;

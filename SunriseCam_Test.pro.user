@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2023-09-06T17:13:06. -->
+<!-- Written by QtCreator 4.11.0, 2023-09-11T16:28:25. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -220,13 +220,13 @@
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinux.DirectUploadStep</value>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedFiles">
        <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Debug/SunriseCam_Test</value>
-       <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Release/SunriseCam_Test</value>
        <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Debug/SunriseCam_Test</value>
+       <value type="QString">/mnt/d/WORKS/build-SunriseCam_Test-Qt_5_12_8_aarch64_linux-Release/SunriseCam_Test</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts">
        <value type="QString">192.168.137.101</value>
-       <value type="QString">192.168.137.101</value>
        <value type="QString">192.168.137.10</value>
+       <value type="QString">192.168.137.101</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedRemotePaths">
        <value type="QString">/home/sunrise/CrossCompiled/SunriseCam_Test</value>
@@ -241,14 +241,14 @@
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.IgnoreMissingFiles">false</value>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.Incremental">true</value>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes">
-       <value type="QDateTime">2023-09-06T17:11:29.022</value>
-       <value type="QDateTime">2023-09-06T17:12:12.604</value>
+       <value type="QDateTime">2023-09-11T16:13:04.462</value>
        <value type="QDateTime">2023-09-05T16:50:31.852</value>
+       <value type="QDateTime">2023-09-11T16:27:28.705</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes">
-       <value type="QDateTime">2023-09-06T17:11:30.000</value>
-       <value type="QDateTime">2023-09-06T17:12:13.000</value>
+       <value type="QDateTime">2023-09-11T16:13:05.000</value>
        <value type="QDateTime">2023-09-05T16:51:24.000</value>
+       <value type="QDateTime">2023-09-11T16:27:38.000</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
