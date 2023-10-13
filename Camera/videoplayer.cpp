@@ -16,7 +16,8 @@ void VideoPlayer::startCamera()
 {
     hasStarted=true;
     ///调用 QThread 的start函数 将会自动执行下面的run函数 run函数是一个新的线程
-    this->start();
+    QThreadPool::globalInstance()->start(this);
+//    this->start();
 }
 
 void VideoPlayer::run()
@@ -116,7 +117,7 @@ void VideoPlayer::run()
     hasFinished = false;
     while (1)
     {
-        if (av_read_frame(pFormatCtx, packet) < 0)
+        if (av_read_frame(pFormatCtx, packet) < 0 || !isCapturing)
         {
             hasFinished = true;
             printf("isCapturing is false...\n");

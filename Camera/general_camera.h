@@ -2,7 +2,9 @@
 #define GENERAL_CAMERA_H
 
 #include <iostream>
+#include <QRunnable>
 #include <QThread>
+#include <QThreadPool>
 #include <QString>
 #include <QImage>
 #include <QMutex>
@@ -11,7 +13,7 @@ QT_BEGIN_NAMESPACE
 using namespace std;
 QT_END_NAMESPACE
 
-class General_Camera : public QThread
+class General_Camera : public QObject,public QRunnable
 {
     Q_OBJECT
 

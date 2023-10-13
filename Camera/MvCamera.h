@@ -22,12 +22,12 @@ public:
 
      int nIndex;
      MV_CC_DEVICE_INFO_LIST  m_stDevList;
-     unsigned char * pData;
      MV_FRAME_OUT_INFO_EX* pFrameInfo;
+     unsigned char * pData;
      bool froceRaw;
 
      void startCamera() override;
-     void getOneFrame() override;
+     void run() override;
 
     // ch:获取SDK版本号 | en:Get SDK Version
     static int GetSDKVersion();
@@ -111,7 +111,8 @@ public:
 private:
 
     void* m_hDevHandle;
-
+    unsigned int m_nConvertDataSize;
+    unsigned char *m_ConvertData;
 };
 
 void __stdcall ImageCallBack(unsigned char * pData, MV_FRAME_OUT_INFO_EX* pFrameInfo,
